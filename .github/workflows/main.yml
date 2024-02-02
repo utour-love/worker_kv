@@ -15,7 +15,3 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          environment: production
-          workingDirectory:
-          wranglerVersion: 3.25.0
-          command: deployments
