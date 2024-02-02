@@ -1,37 +1,21 @@
-# name: 部署 Cloudflare
+name: 部署 Cloudflare
 
-# on:
-#   push:
-#     branches:
-#       - main
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     name: wrangler 设置
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: 构建和部署 Worker
-#         uses: cloudflare/wrangler-action@v3
-#         with:
-#           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-#           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-#           environment: production
-#           wranglerVersion: 3.25.0
-#           command: deployments
-
-name: Deploy Worker
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    name: wrangler 设置
     steps:
-      - uses: actions/checkout@v4
-      - name: Build & Deploy Worker
-        uses: cloudflare/wrangler-action@v3
+      - name: 设置 账号
+        uses: cloudflare/wrangler-action@v3.1.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          environment: production
+          workingDirectory:
+          wranglerVersion: 3.25.0
+          command: deployments
