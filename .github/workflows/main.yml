@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: wrangler 设置
     steps:
-      - name: 设置 账号
+      - name: 设置账号
         uses: cloudflare/wrangler-action@v3.1.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
