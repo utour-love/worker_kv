@@ -11,10 +11,11 @@ jobs:
     name: Deploy
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy app
+      - name: build and deploy worker
         uses: cloudflare/wrangler-action@v3.4.1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: whoami && npx wrangler deploy
-
+          command: wrangler deploy
+          preCommands: |
+            whoami
