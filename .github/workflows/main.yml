@@ -18,5 +18,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: whoami
           postCommands: |
-            echo "*** post commands ***"
-            echo "******"
+            wrangler deploy
