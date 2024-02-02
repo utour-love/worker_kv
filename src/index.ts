@@ -65,6 +65,5 @@ export default {
 			console.error(`Error processing request: ${err}`);
 			return new Response('Internal Server Error', {status: 500});
 		}
-		
 	},
 };
