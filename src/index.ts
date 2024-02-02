@@ -9,24 +9,61 @@
  */
 
 export interface Env {
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace;
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace;
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket;
-	//
-	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-	// MY_SERVICE: Fetcher;
-	//
-	// Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
-	// MY_QUEUE: Queue;
+	photos_URL: KVNamespace;
 }
 
+// 处理存储数据的模块
+async function handlePost(request: Request, env: Env) {
+	const requestBody = await request.text();
+
+	if (!requestBody) {
+		return new Response('Request body is required.', {status: 400});
+	}
+
+	const photoData = JSON.parse(requestBody);
+
+	for (const key in photoData) {
+		if (Object.prototype.hasOwnProperty.call(photoData, key)) {
+			const photoUrl = photoData[key];
+			await env.photos_URL.put(key, photoUrl);
+		}
+	}
+
+	return new Response('Photo data successfully stored in KV.');
+}
+
+// 处理读取数据的模块
+async function handleGet(request: Request, env: Env) {
+	const params = new URL(request.url).searchParams;
+	const photoKey = params.get('key');
+
+	if (photoKey) {
+		const storedValue = await env.photos_URL.get(photoKey);
+
+		if (storedValue === null) {
+			return new Response('Value not found', {status: 404});
+		}
+
+		return new Response(storedValue);
+	} else {
+		return new Response('Parameter "key" is required for GET requests.', {status: 400});
+	}
+}
+
+
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+		try {
+			if (request.method === 'POST') {
+				return await handlePost(request, env);
+			} else if (request.method === 'GET') {
+				return await handleGet(request, env);
+			} else {
+				return new Response('Only POST and GET requests are allowed.', {status: 405});
+			}
+		} catch (err) {
+			console.error(`Error processing request: ${err}`);
+			return new Response('Internal Server Error', {status: 500});
+		}
 	},
 };
