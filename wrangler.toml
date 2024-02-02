@@ -12,7 +12,7 @@ compatibility_date = "2024-01-17"
 # Docs: https://developers.cloudflare.com/workers/runtime-apis/kv
 # [[kv_namespaces]]
 kv_namespaces = [
-	{ binding = "photos_URL", id = "4fc5df6a89264347a859525d781ccb0f" }
+	{ binding = "photos_URL", id = "4fc5df6a89264347a859525d781ccb0f" },
 ]
 
 # Bind an R2 Bucket. Use R2 to store arbitrarily large blobs of data, such as files.
